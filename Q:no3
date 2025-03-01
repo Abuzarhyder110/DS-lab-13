@@ -1,0 +1,79 @@
+#include <iostream>
+
+using namespace std;
+
+struct Node {
+    int data;
+    Node* left;
+    Node* right;
+};
+
+Node* createNode(int data) {
+    Node* newNode = new Node();
+    newNode->data = data;
+    newNode->left = newNode->right = nullptr;
+    return newNode;
+}
+
+Node* insert(Node* root, int data) {
+    if (root == nullptr) {
+        return createNode(data);
+    }
+    if (data < root->data)
+        root->left = insert(root->left, data);
+    else
+        root->right = insert(root->right, data);
+
+    return root;
+}
+
+bool searchNonRecursive(Node* root, int key) {
+    while (root != nullptr) {
+        if (key == root->data)
+            return true;
+        else if (key < root->data)
+            root = root->left;
+        else
+            root = root->right;
+    }
+    return false;
+}
+
+bool searchRecursive(Node* root, int key) {
+    if (root == nullptr)
+        return false;
+    if (root->data == key)
+        return true;
+    if (key < root->data)
+        return searchRecursive(root->left, key);
+    return searchRecursive(root->right);
+}
+
+void inorder(Node* root) {
+    if (root == nullptr)
+        return;
+    inorder(root->left);
+    cout << root->data << " ";
+    inorder(root->right);
+}
+
+int main() {
+    Node* root = nullptr;
+    int arr[] = {50, 30, 70, 20, 40, 60, 80};
+    for (int num : arr)
+        root = insert(root, num);
+
+    cout << "Inorder: ";
+    inorder(root);
+    cout << endl;
+
+    int key = 40;
+    cout << "Non-Recursive Search " << key << ": ";
+    cout << (searchNonRecursive(root, key) ? "Found\n" : "Not Found\n");
+
+    key = 90;
+    cout << "Recursive Search " << key << ": ";
+    cout << (searchRecursive(root, key) ? "Found\n" : "Not Found\n");
+
+    return 0;
+}
